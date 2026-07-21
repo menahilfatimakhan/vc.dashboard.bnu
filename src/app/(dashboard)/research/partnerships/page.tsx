@@ -52,14 +52,14 @@ export default function ResearchPartnershipsPage() {
       <Breadcrumb items={breadcrumb} onJump={jumpToBreadcrumb} />
       <FilterBar filters={filters} config={filterConfig} onChange={handleFilterChange} onClearAll={resetAll} />
 
-      <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
+      <div className="grid grid-cols-2 gap-5 lg:grid-cols-4">
         <SummaryCard label="Publications" value={summary.data?.totalPublications} loading={summary.loading} icon={BookOpen} />
         <SummaryCard label="Grants Applied" value={summary.data?.grantsApplied} loading={summary.loading} icon={Award} />
         <SummaryCard label="Grants Won" value={summary.data?.grantsWon} loading={summary.loading} icon={Award} />
         <SummaryCard label="Active Partnerships" value={summary.data?.partnerships.length} loading={summary.loading} icon={Globe2} />
       </div>
 
-      <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
+      <div className="grid grid-cols-1 gap-5 lg:grid-cols-3">
         <ChartCard
           title="Publications — 5-Year Trend"
           variant="line"
@@ -76,12 +76,12 @@ export default function ResearchPartnershipsPage() {
         <ChartCard title="Research Grants: Applied vs Won vs Rejected" variant="donut" data={summary.data?.grantsByStatus} loading={summary.loading} />
       </div>
 
-      <div className="rounded-2xl border border-black/5 bg-surface p-5 shadow-sm">
-        <h3 className="mb-1 flex items-center gap-2 text-sm font-semibold text-ink">
-          <Sparkles className="h-4 w-4 text-brand-steel" /> Flagship Initiatives
+      <div className="rounded-2xl border border-hairline bg-surface p-5 shadow-card transition-all duration-150 hover:-translate-y-px hover:border-hairline-hover hover:shadow-card-hover">
+        <h3 className="mb-1 flex items-center gap-2 text-[15px] font-semibold text-ink">
+          <Sparkles className="h-4 w-4 text-accent-500" strokeWidth={1.5} /> Flagship Initiatives
         </h3>
         <p className="mb-3 text-xs text-ink-muted">Real, confirmed via bnu.edu.pk — not part of the dummy data set below.</p>
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+        <div className="grid grid-cols-1 gap-5 md:grid-cols-3">
           {summary.data?.flagshipInitiatives.map((initiative) => (
             <div key={initiative.id} className="rounded-xl border border-hairline p-4">
               <p className="text-sm font-semibold text-ink">{initiative.name}</p>
@@ -91,7 +91,7 @@ export default function ResearchPartnershipsPage() {
               </p>
               <ul className="mt-2 flex flex-wrap gap-1.5">
                 {initiative.relatedEntities.map((e) => (
-                  <li key={e} className="rounded-full bg-brand-steel/10 px-2 py-0.5 text-[10px] font-medium text-brand-navy">
+                  <li key={e} className="rounded-full bg-accent-50 px-2 py-0.5 text-[10px] font-medium text-accent-600">
                     {e}
                   </li>
                 ))}
@@ -101,12 +101,12 @@ export default function ResearchPartnershipsPage() {
         </div>
       </div>
 
-      <div className="rounded-2xl border border-black/5 bg-surface p-5 shadow-sm">
-        <h3 className="mb-3 text-sm font-semibold text-ink">Active MoUs & Partnerships</h3>
+      <div className="rounded-2xl border border-hairline bg-surface p-5 shadow-card transition-all duration-150 hover:-translate-y-px hover:border-hairline-hover hover:shadow-card-hover">
+        <h3 className="mb-3 text-[15px] font-semibold text-ink">Active MoUs & Partnerships</h3>
         <div className="overflow-x-auto">
           <table className="w-full min-w-[480px] text-sm">
             <thead>
-              <tr className="border-b border-hairline text-left text-xs font-medium uppercase tracking-wide text-ink-muted">
+              <tr className="border-b border-hairline bg-canvas text-left text-[11px] font-semibold tracking-[0.04em] text-ink-muted uppercase">
                 <th className="px-3 py-2">Partner</th>
                 <th className="px-3 py-2">Country</th>
                 <th className="px-3 py-2">Focus Area</th>
@@ -115,7 +115,7 @@ export default function ResearchPartnershipsPage() {
             </thead>
             <tbody>
               {summary.data?.partnerships.map((p) => (
-                <tr key={p.id} className="border-b border-hairline last:border-0">
+                <tr key={p.id} className="border-b border-hairline transition-colors duration-150 last:border-0 hover:bg-subtle">
                   <td className="px-3 py-2 font-medium text-ink">{p.partnerName}</td>
                   <td className="px-3 py-2 text-ink-secondary">{p.country}</td>
                   <td className="px-3 py-2 text-ink-secondary">{p.focusArea}</td>

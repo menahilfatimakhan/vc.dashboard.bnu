@@ -7,8 +7,10 @@ export interface EmptyStateProps {
 
 export function EmptyState({ message, icon: Icon = Inbox }: EmptyStateProps) {
   return (
-    <div className="flex flex-col items-center justify-center gap-2 py-12 text-center">
-      <Icon className="h-8 w-8 text-ink-muted" strokeWidth={1.5} />
+    <div className="flex flex-col items-center justify-center gap-3 py-12 text-center">
+      <span className="flex h-12 w-12 items-center justify-center rounded-full bg-subtle">
+        <Icon className="h-6 w-6 text-ink-muted" strokeWidth={1.5} />
+      </span>
       <p className="text-sm text-ink-muted">{message}</p>
     </div>
   );

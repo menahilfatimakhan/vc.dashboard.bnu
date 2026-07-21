@@ -84,7 +84,7 @@ export default function ScholarshipsPage() {
       <Breadcrumb items={breadcrumb} onJump={jumpToBreadcrumb} />
       <FilterBar filters={filters} config={filterConfig} onChange={handleFilterChange} onClearAll={resetAll} />
 
-      <div className="grid grid-cols-2 gap-4 lg:grid-cols-3">
+      <div className="grid grid-cols-2 gap-5 lg:grid-cols-3">
         <SummaryCard label="Total Recipients" value={summary.data?.totalRecipients} loading={summary.loading} icon={Users} />
         <SummaryCard
           label="Total Disbursed"
@@ -100,7 +100,7 @@ export default function ScholarshipsPage() {
         />
       </div>
 
-      <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
+      <div className="grid grid-cols-1 gap-5 lg:grid-cols-3">
         <ChartCard
           title="% of Student Body on Scholarship"
           variant="gauge"
@@ -119,12 +119,12 @@ export default function ScholarshipsPage() {
         </div>
       </div>
 
-      <div className="rounded-2xl border border-black/5 bg-surface p-5 shadow-sm">
-        <h3 className="mb-3 text-sm font-semibold text-ink">Active Scholarship Types</h3>
+      <div className="rounded-2xl border border-hairline bg-surface p-5 shadow-card transition-all duration-150 hover:-translate-y-px hover:border-hairline-hover hover:shadow-card-hover">
+        <h3 className="mb-3 text-[15px] font-semibold text-ink">Active Scholarship Types</h3>
         <div className="overflow-x-auto">
           <table className="w-full min-w-[520px] text-sm">
             <thead>
-              <tr className="border-b border-hairline text-left text-xs font-medium uppercase tracking-wide text-ink-muted">
+              <tr className="border-b border-hairline bg-canvas text-left text-[11px] font-semibold tracking-[0.04em] text-ink-muted uppercase">
                 <th className="px-3 py-2">Type</th>
                 <th className="px-3 py-2">Awarding Criteria</th>
                 <th className="px-3 py-2 text-right">Amount / Award</th>
@@ -133,7 +133,7 @@ export default function ScholarshipsPage() {
             </thead>
             <tbody>
               {summary.data?.activeTypes.map((t) => (
-                <tr key={t.id} className="border-b border-hairline last:border-0">
+                <tr key={t.id} className="border-b border-hairline transition-colors duration-150 last:border-0 hover:bg-subtle">
                   <td className="px-3 py-2 font-medium text-ink">{t.name}</td>
                   <td className="px-3 py-2 text-ink-secondary">{t.awardingCriteria}</td>
                   <td className="px-3 py-2 text-right tabular-nums text-ink">{formatCurrencyPKR(t.amountPerAward)}</td>

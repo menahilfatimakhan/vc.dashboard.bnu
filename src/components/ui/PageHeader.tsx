@@ -19,7 +19,8 @@ export function PageHeader({ title, showDate = true, speculative }: PageHeaderPr
         {showDate && <p className="text-sm text-ink-muted">{CURRENT_DATE_LABEL}</p>}
       </div>
       {speculative && (
-        <span className="rounded-full bg-status-warning/15 px-3 py-1 text-xs font-medium text-status-warning">
+        <span className="inline-flex items-center gap-1.5 rounded-full bg-status-warning-50 px-3 py-1 text-xs font-medium text-status-warning">
+          <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-status-warning" />
           Speculative content — pending specification
         </span>
       )}

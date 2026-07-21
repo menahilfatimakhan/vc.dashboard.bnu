@@ -70,13 +70,13 @@ export default function HostelPage() {
       <Breadcrumb items={breadcrumb} onJump={jumpToBreadcrumb} />
       <FilterBar filters={filters} config={filterConfig} onChange={handleFilterChange} onClearAll={resetAll} />
 
-      <div className="grid grid-cols-2 gap-4 lg:grid-cols-3">
+      <div className="grid grid-cols-2 gap-5 lg:grid-cols-3">
         <SummaryCard label="Total Residents" value={summary.data?.totalResidents} loading={summary.loading} icon={Building2} />
         <SummaryCard label="On-Campus" value={onCampus} loading={summary.loading} icon={Home} />
         <SummaryCard label="Off-Campus" value={offCampus} loading={summary.loading} icon={TreePine} />
       </div>
 
-      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+      <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
         <ChartCard title="On-Campus vs Off-Campus" variant="donut" data={summary.data?.byType} loading={summary.loading} />
         <ChartCard title="Occupancy vs Capacity" loading={summary.loading} height={220}>
           <StackedBarChartInner

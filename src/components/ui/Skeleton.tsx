@@ -1,21 +1,20 @@
 function pulse(className: string) {
-  return <div className={`animate-pulse rounded-md bg-black/[0.06] ${className}`} />;
+  return <div className={`skeleton-shimmer rounded-md ${className}`} />;
 }
 
 export function SkeletonCard() {
   return (
-    <div className="rounded-2xl border border-black/5 bg-surface p-5 shadow-sm">
+    <div className="rounded-2xl border border-hairline bg-surface p-5 shadow-card">
       {pulse("h-3 w-20 mb-3")}
-      {pulse("h-7 w-24")}
+      {pulse("h-8 w-24")}
     </div>
   );
 }
 
 export function SkeletonChart({ height = 260 }: { height?: number }) {
   return (
-    <div className="rounded-2xl border border-black/5 bg-surface p-5 shadow-sm">
+    <div className="rounded-2xl border border-hairline bg-surface p-5 shadow-card">
       {pulse("h-4 w-32 mb-4")}
-      {pulse(`w-full`)}
       <div style={{ height }} className="mt-2">
         {pulse("h-full w-full")}
       </div>

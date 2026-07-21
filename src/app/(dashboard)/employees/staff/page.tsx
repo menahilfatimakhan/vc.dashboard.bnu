@@ -52,7 +52,7 @@ export default function StaffPage() {
       <Breadcrumb items={breadcrumb} onJump={jumpToBreadcrumb} />
       <FilterBar filters={filters} config={filterConfig} onChange={handleFilterChange} onClearAll={resetAll} />
 
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+      <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
         <SummaryCard label="Total Staff" value={summary.data?.total} loading={summary.loading} icon={Briefcase} />
         <SummaryCard
           label="Departments Represented"
@@ -62,7 +62,7 @@ export default function StaffPage() {
         />
       </div>
 
-      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+      <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
         <ChartCard
           title="By Department"
           subtitle="Click a bar to drill into that department"

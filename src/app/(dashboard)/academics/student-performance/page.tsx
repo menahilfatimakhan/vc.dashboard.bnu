@@ -84,7 +84,7 @@ export default function StudentPerformancePage() {
       <Breadcrumb items={breadcrumb} onJump={jumpToBreadcrumb} />
       <FilterBar filters={filters} config={filterConfig} onChange={handleFilterChange} onClearAll={resetAll} />
 
-      <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
+      <div className="grid grid-cols-2 gap-5 lg:grid-cols-4">
         <SummaryCard label="Students Assessed" value={summary.data?.total} loading={summary.loading} icon={GraduationCap} />
         <SummaryCard
           label="Division 3 (Top)"
@@ -106,7 +106,7 @@ export default function StudentPerformancePage() {
         />
       </div>
 
-      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+      <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
         <ChartCard
           title="CGPA Division Split"
           variant="donut"

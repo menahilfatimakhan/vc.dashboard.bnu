@@ -9,6 +9,7 @@ import { SummaryCard } from "@/components/ui/SummaryCard";
 import { ChartCard } from "@/components/ui/ChartCard";
 import { BarChartInner } from "@/components/ui/charts/BarChartInner";
 import { DataTable, type Column } from "@/components/ui/DataTable";
+import { StatusPill } from "@/components/ui/StatusPill";
 import { useModuleFilters, type DrillLevelConfig } from "@/hooks/useModuleFilters";
 import { useAsync } from "@/hooks/useAsync";
 import { SCHOOLS, resolveSchool } from "@/lib/data/catalog/schools";
@@ -51,7 +52,7 @@ export default function ClassesPage() {
     { key: "id", header: "Class ID" },
     { key: "schoolName", header: "School" },
     { key: "scheduledAt", header: "Scheduled", render: (r) => formatDateTime(r.scheduledAt) },
-    { key: "attendanceStatus", header: "Attendance" },
+    { key: "attendanceStatus", header: "Attendance", render: (r) => <StatusPill status={r.attendanceStatus} /> },
   ];
 
   return (
@@ -60,7 +61,7 @@ export default function ClassesPage() {
       <Breadcrumb items={breadcrumb} onJump={jumpToBreadcrumb} />
       <FilterBar filters={filters} config={filterConfig} onChange={handleFilterChange} onClearAll={resetAll} />
 
-      <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
+      <div className="grid grid-cols-2 gap-5 lg:grid-cols-4">
         <SummaryCard label="Sessions Scheduled" value={summary.data?.totalScheduled} loading={summary.loading} icon={CalendarCheck} />
         <SummaryCard label="Attended" value={summary.data?.attended} loading={summary.loading} icon={CalendarCheck} />
         <SummaryCard label="Not Attended" value={summary.data?.notAttended} loading={summary.loading} icon={CalendarX} />

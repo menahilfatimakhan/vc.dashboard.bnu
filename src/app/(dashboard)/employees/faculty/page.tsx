@@ -60,7 +60,7 @@ export default function FacultyPage() {
       <Breadcrumb items={breadcrumb} onJump={jumpToBreadcrumb} />
       <FilterBar filters={filters} config={filterConfig} onChange={handleFilterChange} onClearAll={resetAll} />
 
-      <div className="grid grid-cols-2 gap-4 lg:grid-cols-3">
+      <div className="grid grid-cols-2 gap-5 lg:grid-cols-3">
         <SummaryCard label="Total Faculty" value={summary.data?.total} loading={summary.loading} icon={UserCog} />
         <SummaryCard label="Full-Time" value={summary.data?.fullTime} loading={summary.loading} icon={Building} />
         <SummaryCard label="Visiting" value={summary.data?.visiting} loading={summary.loading} icon={Plane} />

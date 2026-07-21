@@ -8,6 +8,7 @@ import { FilterBar, type FilterFieldConfig } from "@/components/ui/FilterBar";
 import { SummaryCard } from "@/components/ui/SummaryCard";
 import { ChartCard } from "@/components/ui/ChartCard";
 import { DataTable, type Column } from "@/components/ui/DataTable";
+import { StatusPill } from "@/components/ui/StatusPill";
 import { useModuleFilters, type DrillLevelConfig } from "@/hooks/useModuleFilters";
 import { useAsync } from "@/hooks/useAsync";
 import { SCHOOLS, resolveSchool, resolveProgramme } from "@/lib/data/catalog/schools";
@@ -82,7 +83,7 @@ export default function EnrolledStudentsPage() {
     { key: "programmeId", header: "Programme", render: (r) => resolveProgramme(r.programmeId) },
     { key: "semester", header: "Semester" },
     { key: "enrollmentYear", header: "Year", align: "right" },
-    { key: "enrollmentStatus", header: "Status" },
+    { key: "enrollmentStatus", header: "Status", render: (r) => <StatusPill status={r.enrollmentStatus} /> },
     { key: "cgpa", header: "CGPA", align: "right" },
   ];
 
@@ -92,7 +93,7 @@ export default function EnrolledStudentsPage() {
       <Breadcrumb items={breadcrumb} onJump={jumpToBreadcrumb} />
       <FilterBar filters={filters} config={filterConfig} onChange={handleFilterChange} onClearAll={resetAll} />
 
-      <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
+      <div className="grid grid-cols-2 gap-5 lg:grid-cols-4">
         <SummaryCard label="Total Enrolled" value={summary.data?.total} loading={summary.loading} icon={Users} />
         <SummaryCard label="Active" value={summary.data?.active} loading={summary.loading} icon={UserCheck} />
         <SummaryCard
@@ -109,7 +110,7 @@ export default function EnrolledStudentsPage() {
         />
       </div>
 
-      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+      <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
         <ChartCard
           title="By School"
           subtitle="Click a bar to drill into that school"

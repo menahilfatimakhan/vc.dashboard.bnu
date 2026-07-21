@@ -8,6 +8,7 @@ import { FilterBar, type FilterFieldConfig } from "@/components/ui/FilterBar";
 import { SummaryCard } from "@/components/ui/SummaryCard";
 import { ChartCard } from "@/components/ui/ChartCard";
 import { DataTable, type Column } from "@/components/ui/DataTable";
+import { StatusPill } from "@/components/ui/StatusPill";
 import { useModuleFilters, type DrillLevelConfig } from "@/hooks/useModuleFilters";
 import { useAsync } from "@/hooks/useAsync";
 import { SCHOOLS } from "@/lib/data/catalog/schools";
@@ -54,15 +55,15 @@ export default function GrantsPage() {
     { key: "id", header: "Grant ID" },
     { key: "title", header: "Title" },
     { key: "ownerName", header: "Owning Unit" },
-    { key: "status", header: "Status" },
+    { key: "status", header: "Status", render: (r) => <StatusPill status={r.status} /> },
     { key: "endDate", header: "End Date", render: (r) => formatDate(r.endDate) },
     {
       key: "endingSoon",
       header: "Flag",
       render: (r) =>
         r.endingSoon ? (
-          <span className="inline-flex items-center gap-1 text-xs font-medium text-status-critical">
-            <AlertTriangle className="h-3.5 w-3.5" /> Ending soon
+          <span className="inline-flex w-fit items-center gap-1.5 rounded-lg bg-status-critical-50 px-2 py-1 text-xs font-medium whitespace-nowrap text-status-critical">
+            <AlertTriangle className="h-3.5 w-3.5" strokeWidth={1.5} /> Ending soon
           </span>
         ) : (
           ""
@@ -76,7 +77,7 @@ export default function GrantsPage() {
       <Breadcrumb items={breadcrumb} onJump={jumpToBreadcrumb} />
       <FilterBar filters={filters} config={filterConfig} onChange={handleFilterChange} onClearAll={resetAll} />
 
-      <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
+      <div className="grid grid-cols-2 gap-5 lg:grid-cols-4">
         <SummaryCard label="Total Grants" value={summary.data?.total} loading={summary.loading} icon={HandCoins} />
         <SummaryCard label="Completed" value={summary.data?.completed} loading={summary.loading} icon={CheckCircle2} />
         <SummaryCard label="Underway" value={summary.data?.underway} loading={summary.loading} icon={Clock} />
@@ -89,7 +90,7 @@ export default function GrantsPage() {
         />
       </div>
 
-      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+      <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
         <ChartCard title="Completed vs Underway" variant="donut" data={summary.data?.byStatus} loading={summary.loading} />
         <ChartCard
           title="By Owning Unit"

@@ -77,13 +77,13 @@ export default function StudentLifePage() {
       <Breadcrumb items={breadcrumb} onJump={jumpToBreadcrumb} />
       <FilterBar filters={filters} config={filterConfig} onChange={handleFilterChange} onClearAll={resetAll} />
 
-      <div className="grid grid-cols-2 gap-4 lg:grid-cols-3">
+      <div className="grid grid-cols-2 gap-5 lg:grid-cols-3">
         <SummaryCard label="Societies" value={summary.data?.totalSocieties} loading={summary.loading} icon={Users2} />
         <SummaryCard label="Events" value={summary.data?.totalEvents} loading={summary.loading} icon={CalendarDays} />
         <SummaryCard label="Total Participation" value={summary.data?.totalParticipation} loading={summary.loading} icon={Sparkles} />
       </div>
 
-      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+      <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
         <ChartCard title="Events by Category" variant="donut" data={summary.data?.byCategory} loading={summary.loading} />
         <ChartCard title="Participation by Society" variant="bar" data={bySocietyData} loading={summary.loading} />
       </div>

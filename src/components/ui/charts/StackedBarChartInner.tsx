@@ -1,7 +1,8 @@
 "use client";
 
-import { Bar, BarChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
-import { CATEGORICAL, INK } from "@/config/theme";
+import { Bar, BarChart, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+import { CATEGORICAL, INK, TOOLTIP } from "@/config/theme";
+import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 
 export interface StackedSeries {
   dataKey: string;
@@ -16,6 +17,14 @@ export interface StackedBarChartInnerProps {
   stacked?: boolean;
 }
 
+function barRadius(index: number, seriesCount: number, stacked: boolean): [number, number, number, number] {
+  if (!stacked) return [0, 6, 6, 0];
+  if (seriesCount === 1) return [6, 6, 6, 6];
+  if (index === 0) return [6, 0, 0, 6]; // outer (free) end of the first stacked segment
+  if (index === seriesCount - 1) return [0, 6, 6, 0]; // outer (free) end of the last stacked segment
+  return [0, 0, 0, 0]; // inner joins between segments stay square
+}
+
 export function StackedBarChartInner({
   data,
   categoryKey,
@@ -23,11 +32,12 @@ export function StackedBarChartInner({
   height = 280,
   stacked = true,
 }: StackedBarChartInnerProps) {
+  const reducedMotion = usePrefersReducedMotion();
+
   return (
     <ResponsiveContainer width="100%" height={height}>
-      <BarChart data={data} layout="vertical" margin={{ top: 4, right: 16, bottom: 4, left: 4 }}>
-        <CartesianGrid horizontal={false} stroke={INK.hairline} />
-        <XAxis type="number" tick={{ fontSize: 11, fill: INK.muted }} axisLine={{ stroke: INK.hairline }} tickLine={false} />
+      <BarChart data={data} layout="vertical" margin={{ top: 4, right: 16, bottom: 4, left: 4 }} barCategoryGap="30%">
+        <XAxis type="number" tick={{ fontSize: 11, fill: INK.muted }} axisLine={false} tickLine={false} />
         <YAxis
           type="category"
           dataKey={categoryKey}
@@ -37,10 +47,16 @@ export function StackedBarChartInner({
           tickLine={false}
         />
         <Tooltip
-          cursor={{ fill: INK.page }}
-          contentStyle={{ borderRadius: 8, border: `1px solid ${INK.hairline}`, fontSize: 12 }}
+          cursor={{ fill: INK.subtle }}
+          contentStyle={TOOLTIP.contentStyle}
+          itemStyle={TOOLTIP.itemStyle}
+          labelStyle={TOOLTIP.labelStyle}
         />
-        <Legend wrapperStyle={{ fontSize: 12, color: INK.secondary }} iconType="circle" iconSize={8} />
+        <Legend
+          wrapperStyle={{ fontSize: 12, color: INK.muted }}
+          iconType="circle"
+          iconSize={8}
+        />
         {series.map((s, i) => (
           <Bar
             key={s.dataKey}
@@ -48,17 +64,11 @@ export function StackedBarChartInner({
             name={s.label}
             stackId={stacked ? "stack" : undefined}
             fill={CATEGORICAL[i % CATEGORICAL.length]}
-            maxBarSize={22}
-            isAnimationActive={false}
-            radius={
-              !stacked
-                ? [0, 4, 4, 0]
-                : i === series.length - 1
-                  ? [0, 4, 4, 0]
-                  : i === 0
-                    ? [0, 0, 0, 0]
-                    : [0, 0, 0, 0]
-            }
+            maxBarSize={20}
+            isAnimationActive={!reducedMotion}
+            animationDuration={600}
+            animationBegin={i * 40}
+            radius={barRadius(i, series.length, stacked)}
           />
         ))}
       </BarChart>

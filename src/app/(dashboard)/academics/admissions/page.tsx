@@ -8,6 +8,7 @@ import { FilterBar, type FilterFieldConfig } from "@/components/ui/FilterBar";
 import { SummaryCard } from "@/components/ui/SummaryCard";
 import { ChartCard } from "@/components/ui/ChartCard";
 import { DataTable, type Column } from "@/components/ui/DataTable";
+import { StatusPill } from "@/components/ui/StatusPill";
 import { useModuleFilters, type DrillLevelConfig } from "@/hooks/useModuleFilters";
 import { useAsync } from "@/hooks/useAsync";
 import { SCHOOLS, resolveSchool, resolveProgramme } from "@/lib/data/catalog/schools";
@@ -68,7 +69,7 @@ export default function AdmissionsPage() {
     { key: "programmeName", header: "Programme" },
     { key: "semester", header: "Intake" },
     { key: "year", header: "Year", align: "right" },
-    { key: "status", header: "Status" },
+    { key: "status", header: "Status", render: (r) => <StatusPill status={r.status} /> },
   ];
 
   return (
@@ -77,7 +78,7 @@ export default function AdmissionsPage() {
       <Breadcrumb items={breadcrumb} onJump={jumpToBreadcrumb} />
       <FilterBar filters={filters} config={filterConfig} onChange={handleFilterChange} onClearAll={resetAll} />
 
-      <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
+      <div className="grid grid-cols-2 gap-5 lg:grid-cols-4">
         <SummaryCard label="Current Application Pool" value={summary.data?.currentPoolCount} loading={summary.loading} icon={Inbox} />
         <SummaryCard label="Total Applications (5yr)" value={summary.data?.totalApplications} loading={summary.loading} icon={FileText} />
         <SummaryCard
@@ -94,7 +95,7 @@ export default function AdmissionsPage() {
         />
       </div>
 
-      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+      <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
         <ChartCard
           title="Applications Received — 5-Year Trend"
           variant="line"

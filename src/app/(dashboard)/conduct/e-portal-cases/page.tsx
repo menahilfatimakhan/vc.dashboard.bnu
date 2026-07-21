@@ -8,6 +8,7 @@ import { FilterBar, type FilterFieldConfig } from "@/components/ui/FilterBar";
 import { SummaryCard } from "@/components/ui/SummaryCard";
 import { ChartCard } from "@/components/ui/ChartCard";
 import { DataTable, type Column } from "@/components/ui/DataTable";
+import { StatusPill } from "@/components/ui/StatusPill";
 import { useModuleFilters } from "@/hooks/useModuleFilters";
 import { useAsync } from "@/hooks/useAsync";
 import { getEPortalCases, getEPortalSummary, type EPortalFilters } from "@/lib/services/ePortalService";
@@ -67,7 +68,7 @@ export default function EPortalCasesPage() {
     { key: "category", header: "Category" },
     { key: "dateRaised", header: "Date Raised", render: (r) => formatDate(r.dateRaised) },
     { key: "daysOpen", header: "Days Open", align: "right" },
-    { key: "status", header: "Status" },
+    { key: "status", header: "Status", render: (r) => <StatusPill status={r.status} /> },
   ];
 
   return (
@@ -76,7 +77,7 @@ export default function EPortalCasesPage() {
       <Breadcrumb items={breadcrumb} onJump={jumpToBreadcrumb} />
       <FilterBar filters={filters} config={filterConfig} onChange={handleFilterChange} onClearAll={resetAll} />
 
-      <div className="grid grid-cols-2 gap-4 lg:grid-cols-3">
+      <div className="grid grid-cols-2 gap-5 lg:grid-cols-3">
         <SummaryCard label="Total Open Cases" value={summary.data?.total} loading={summary.loading} icon={Inbox} />
         <SummaryCard
           label="In-Process"
@@ -95,7 +96,7 @@ export default function EPortalCasesPage() {
         />
       </div>
 
-      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+      <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
         <ChartCard title="In-Process vs Escalated" variant="donut" data={summary.data?.byStatus} loading={summary.loading} />
         <ChartCard title="By Category" variant="bar" data={summary.data?.byCategory} loading={summary.loading} />
       </div>

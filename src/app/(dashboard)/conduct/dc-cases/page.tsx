@@ -8,6 +8,7 @@ import { FilterBar, type FilterFieldConfig } from "@/components/ui/FilterBar";
 import { SummaryCard } from "@/components/ui/SummaryCard";
 import { ChartCard } from "@/components/ui/ChartCard";
 import { DataTable, type Column } from "@/components/ui/DataTable";
+import { StatusPill } from "@/components/ui/StatusPill";
 import { useModuleFilters, type DrillLevelConfig } from "@/hooks/useModuleFilters";
 import { useAsync } from "@/hooks/useAsync";
 import { SCHOOLS, resolveSchool, resolveProgramme } from "@/lib/data/catalog/schools";
@@ -70,7 +71,7 @@ export default function DCCasesPage() {
     { key: "programmeName", header: "Programme" },
     { key: "dateRaised", header: "Date Raised", render: (r) => formatDate(r.dateRaised) },
     { key: "violationType", header: "Violation" },
-    { key: "status", header: "Status" },
+    { key: "status", header: "Status", render: (r) => <StatusPill status={r.status} /> },
   ];
 
   return (
@@ -79,7 +80,7 @@ export default function DCCasesPage() {
       <Breadcrumb items={breadcrumb} onJump={jumpToBreadcrumb} />
       <FilterBar filters={filters} config={filterConfig} onChange={handleFilterChange} onClearAll={resetAll} />
 
-      <div className="grid grid-cols-2 gap-4 lg:grid-cols-3">
+      <div className="grid grid-cols-2 gap-5 lg:grid-cols-3">
         <SummaryCard label="Total Cases" value={summary.data?.total} loading={summary.loading} icon={ShieldAlert} />
         <SummaryCard
           label="Pending"
@@ -98,7 +99,7 @@ export default function DCCasesPage() {
         />
       </div>
 
-      <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
+      <div className="grid grid-cols-1 gap-5 lg:grid-cols-3">
         <ChartCard title="Pending vs Resolved" variant="donut" data={summary.data?.byStatus} loading={summary.loading} />
         <ChartCard title="By Violation Type" variant="bar" data={summary.data?.byViolationType} loading={summary.loading} />
         <ChartCard

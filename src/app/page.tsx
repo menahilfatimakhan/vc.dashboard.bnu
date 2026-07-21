@@ -18,10 +18,10 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="flex min-h-screen flex-1 items-center justify-center bg-page px-4">
-      <div className="w-full max-w-sm rounded-2xl border border-black/5 bg-surface p-8 shadow-sm">
+    <div className="flex min-h-screen flex-1 items-center justify-center bg-canvas px-4">
+      <div className="w-full max-w-sm rounded-2xl border border-hairline bg-surface p-8 shadow-card">
         <div className="mb-6 flex items-center gap-2">
-          <Layers className="h-7 w-7 text-brand-steel" strokeWidth={2.2} />
+          <Layers className="h-7 w-7 text-accent-500" strokeWidth={2.2} />
           <div>
             <p className="text-base font-semibold text-ink">BNU Analytical Dashboard</p>
             <p className="text-xs text-ink-muted">Vice Chancellor Access</p>
@@ -31,8 +31,8 @@ export default function LoginPage() {
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <label className="flex flex-col gap-1.5 text-sm text-ink-secondary">
             Username
-            <div className="flex items-center gap-2 rounded-lg border border-hairline px-3 py-2 focus-within:border-brand-steel">
-              <User className="h-4 w-4 text-ink-muted" />
+            <div className="flex items-center gap-2 rounded-lg border border-hairline px-3 py-2 transition-colors duration-150 focus-within:border-accent-500">
+              <User className="h-4 w-4 text-ink-muted" strokeWidth={1.5} />
               <input
                 type="text"
                 required
@@ -44,8 +44,8 @@ export default function LoginPage() {
 
           <label className="flex flex-col gap-1.5 text-sm text-ink-secondary">
             Password
-            <div className="flex items-center gap-2 rounded-lg border border-hairline px-3 py-2 focus-within:border-brand-steel">
-              <Lock className="h-4 w-4 text-ink-muted" />
+            <div className="flex items-center gap-2 rounded-lg border border-hairline px-3 py-2 transition-colors duration-150 focus-within:border-accent-500">
+              <Lock className="h-4 w-4 text-ink-muted" strokeWidth={1.5} />
               <input
                 type="password"
                 required
@@ -58,7 +58,7 @@ export default function LoginPage() {
           <button
             type="submit"
             disabled={submitting}
-            className="mt-2 rounded-lg bg-brand-steel px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-brand-navy disabled:opacity-60"
+            className="mt-2 rounded-lg bg-accent-500 px-4 py-2.5 text-sm font-medium text-white transition-colors duration-150 hover:bg-accent-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-500/40 disabled:opacity-60"
           >
             {submitting ? "Signing in…" : "Sign in"}
           </button>

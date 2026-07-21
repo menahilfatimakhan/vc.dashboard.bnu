@@ -12,8 +12,10 @@ export interface BreadcrumbProps {
 }
 
 export function Breadcrumb({ items, onJump }: BreadcrumbProps) {
+  const key = items.map((i) => i.id ?? "root").join(">");
+
   return (
-    <nav className="flex flex-wrap items-center gap-1 text-sm">
+    <nav key={key} className="breadcrumb-slide-in flex flex-wrap items-center gap-1 text-sm">
       {items.map((item, index) => {
         const isLast = index === items.length - 1;
         return (
@@ -24,13 +26,13 @@ export function Breadcrumb({ items, onJump }: BreadcrumbProps) {
               disabled={isLast}
               className={
                 isLast
-                  ? "font-medium text-ink"
-                  : "text-ink-secondary hover:text-brand-steel hover:underline"
+                  ? "font-semibold text-ink"
+                  : "rounded-lg px-1 py-0.5 text-ink-secondary transition-colors duration-150 hover:bg-subtle hover:text-accent-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-500/40"
               }
             >
               {item.label}
             </button>
-            {!isLast && <ChevronRight className="h-3.5 w-3.5 text-ink-muted" />}
+            {!isLast && <ChevronRight className="h-3.5 w-3.5 text-ink-muted" strokeWidth={1.5} />}
           </span>
         );
       })}

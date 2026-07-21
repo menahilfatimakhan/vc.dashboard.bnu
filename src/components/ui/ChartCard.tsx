@@ -50,31 +50,33 @@ export function ChartCard({
       (variant === "funnel" && (!funnelData || funnelData.length === 0)));
 
   return (
-    <div className="rounded-2xl border border-black/5 bg-surface p-5 shadow-sm">
+    <div className="flex min-h-[320px] flex-col rounded-2xl border border-hairline bg-surface p-5 shadow-card transition-all duration-150 hover:-translate-y-px hover:border-hairline-hover hover:shadow-card-hover">
       <div className="mb-3">
-        <h3 className="text-sm font-semibold text-ink">{title}</h3>
+        <h3 className="text-[15px] font-semibold text-ink">{title}</h3>
         {subtitle && <p className="text-xs text-ink-muted">{subtitle}</p>}
       </div>
 
-      {loading ? (
-        <SkeletonChart height={height} />
-      ) : isEmpty ? (
-        <EmptyState message={emptyMessage} />
-      ) : children ? (
-        children
-      ) : variant === "bar" ? (
-        <BarChartInner data={data as BarDatum[]} height={height} onSegmentClick={onSegmentClick} />
-      ) : variant === "pie" ? (
-        <PieChartInner data={data as PieDatum[]} height={height} onSegmentClick={onSegmentClick} />
-      ) : variant === "donut" ? (
-        <PieChartInner data={data as PieDatum[]} donut height={height} onSegmentClick={onSegmentClick} />
-      ) : variant === "line" ? (
-        <LineChartInner data={trend ?? []} height={height} />
-      ) : variant === "funnel" ? (
-        <FunnelChartInner data={funnelData ?? []} height={height} />
-      ) : variant === "gauge" ? (
-        <GaugeChartInner value={gaugeValue ?? 0} label={gaugeLabel} height={height} />
-      ) : null}
+      <div className="flex-1">
+        {loading ? (
+          <SkeletonChart height={height} />
+        ) : isEmpty ? (
+          <EmptyState message={emptyMessage} />
+        ) : children ? (
+          children
+        ) : variant === "bar" ? (
+          <BarChartInner data={data as BarDatum[]} height={height} onSegmentClick={onSegmentClick} />
+        ) : variant === "pie" ? (
+          <PieChartInner data={data as PieDatum[]} height={height} onSegmentClick={onSegmentClick} />
+        ) : variant === "donut" ? (
+          <PieChartInner data={data as PieDatum[]} donut height={height} onSegmentClick={onSegmentClick} />
+        ) : variant === "line" ? (
+          <LineChartInner data={trend ?? []} height={height} />
+        ) : variant === "funnel" ? (
+          <FunnelChartInner data={funnelData ?? []} height={height} />
+        ) : variant === "gauge" ? (
+          <GaugeChartInner value={gaugeValue ?? 0} label={gaugeLabel} height={height} />
+        ) : null}
+      </div>
     </div>
   );
 }
