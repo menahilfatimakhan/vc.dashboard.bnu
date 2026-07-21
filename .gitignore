@@ -1,0 +1,46 @@
+# Scratch space
+.tmp/
+
+# Secrets / local env — only env/.env.example is tracked
+.env
+.env.local
+.env.*.local
+env/.env
+env/.env.*
+!env/.env.example
+
+# Dependencies
+node_modules/
+
+# Next.js build output
+.next/
+out/
+build/
+dist/
+
+# npm logs
+npm-debug.log*
+.npm
+
+# Test / coverage output
+coverage/
+.nyc_output/
+
+# TypeScript
+*.tsbuildinfo
+next-env.d.ts
+
+# OS cruft
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor cruft
+.vscode/*
+!.vscode/extensions.json
+.idea/
+*.swp
+*.swo
+
+# Logs
+*.log
