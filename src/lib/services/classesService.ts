@@ -1,20 +1,21 @@
 import { getCanonicalData } from "../data/store";
-import type { ClassSession, PaginatedResult, Pagination } from "../data/types";
+import type { ClassSession, Session } from "../data/types";
 import { resolveSchool, resolveSchoolShort, SCHOOLS } from "../data/catalog/schools";
-import { paginate } from "./paginate";
 import { simulateDelay } from "./simulateDelay";
-import { inDateRange } from "./dateRangeFilter";
+import { inSemesterPeriodRange } from "../data/semesters";
 
 export interface ClassesFilters {
   schoolId?: string;
-  dateFrom?: string;
-  dateTo?: string;
+  sessionId?: string;
+  semesterFrom?: string;
+  semesterTo?: string;
 }
 
 function matches(filters: ClassesFilters) {
   return (c: ClassSession) =>
     (!filters.schoolId || c.schoolId === filters.schoolId) &&
-    inDateRange(c.scheduledAt.slice(0, 10), filters.dateFrom, filters.dateTo);
+    (!filters.sessionId || c.sessionId === filters.sessionId) &&
+    inSemesterPeriodRange(c.year, c.semester, filters.semesterFrom, filters.semesterTo);
 }
 
 export interface ClassesSummary {
@@ -53,12 +54,48 @@ export async function getClassesSummary(filters: ClassesFilters): Promise<Classe
   };
 }
 
-export async function getClassSessions(
-  filters: ClassesFilters,
-  pagination: Pagination,
-): Promise<PaginatedResult<ClassSession & { schoolName: string }>> {
+export interface SessionSummary {
+  id: string;
+  name: string;
+  schoolName: string;
+  scheduled: number;
+  attended: number;
+  attendanceRate: number;
+}
+
+/** Session -> Classes drill-down: one row per Session, aggregating its ClassSession occurrences. */
+export async function getSessions(filters: ClassesFilters): Promise<SessionSummary[]> {
+  await simulateDelay();
+  const { sessions, classSessions } = getCanonicalData();
+  const relevantSessions = filters.schoolId ? sessions.filter((s) => s.schoolId === filters.schoolId) : sessions;
+
+  return relevantSessions
+    .map((session: Session) => {
+      const rows = classSessions
+        .filter((c) => c.sessionId === session.id)
+        .filter(matches({ ...filters, sessionId: undefined }));
+      const attended = rows.filter((c) => c.attendanceStatus === "Attended").length;
+      return {
+        id: session.id,
+        name: session.name,
+        schoolName: resolveSchool(session.schoolId),
+        scheduled: rows.length,
+        attended,
+        attendanceRate: rows.length > 0 ? (attended / rows.length) * 100 : 0,
+      };
+    })
+    .filter((s) => s.scheduled > 0);
+}
+
+export async function getSessionClasses(sessionId: string): Promise<ClassSession[]> {
   await simulateDelay();
   const { classSessions } = getCanonicalData();
-  const rows = classSessions.filter(matches(filters)).map((c) => ({ ...c, schoolName: resolveSchool(c.schoolId) }));
-  return paginate(rows, pagination);
+  return classSessions
+    .filter((c) => c.sessionId === sessionId)
+    .sort((a, b) => b.scheduledAt.localeCompare(a.scheduledAt));
+}
+
+export function resolveSessionName(id: string | undefined): string {
+  if (!id) return "BNU";
+  return getCanonicalData().sessions.find((s) => s.id === id)?.name ?? id;
 }

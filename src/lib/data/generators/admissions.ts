@@ -44,6 +44,11 @@ export function generateAdmissions(
           const status =
             year === CURRENT_YEAR ? "Received" : rng.bool(admitRate) ? "Admitted" : "Rejected";
 
+          // Processing-fee payment happens right after applying, before the admit
+          // decision (matches BNU's real Rs. 4,000 processing-fee step) — admitted
+          // applicants always paid; a portion of the rest never completed payment.
+          const feePaid = status === "Admitted" ? true : rng.bool(0.88);
+
           applications.push({
             id: `BNU-ADM-${String(counter).padStart(6, "0")}`,
             schoolId: school.id,
@@ -51,6 +56,7 @@ export function generateAdmissions(
             semester,
             year,
             status,
+            feePaid,
           });
           counter++;
         }

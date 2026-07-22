@@ -1,5 +1,5 @@
 import type { SeededRandom } from "../prng";
-import type { ClassSession, School } from "../types";
+import type { ClassSession, School, Session } from "../types";
 import { SCHOOL_ENROLLMENT_WEIGHTS } from "../catalog/schools";
 
 const WEEKS_WINDOW = 14; // rolling ~14-week term window
@@ -20,26 +20,56 @@ const ATTENDANCE_RATE_BY_SCHOOL: Record<string, number> = {
   "sch-ip": 0.82,
 };
 
-export function generateClasses(rng: SeededRandom, schools: School[]): ClassSession[] {
-  const sessions: ClassSession[] = [];
+const COURSE_LABELS = [
+  "Core Lecture", "Studio Session", "Lab Session", "Seminar", "Tutorial",
+  "Workshop", "Practicum", "Section A", "Section B", "Section C",
+];
+
+export function generateSessions(rng: SeededRandom, schools: School[]): Session[] {
+  const sessions: Session[] = [];
+  let counter = 1;
+
+  for (const school of schools) {
+    const sessionCount = Math.round(4 + (SCHOOL_ENROLLMENT_WEIGHTS[school.id] ?? 1) * 3);
+    for (let i = 0; i < sessionCount; i++) {
+      sessions.push({
+        id: `BNU-SES-${String(counter).padStart(4, "0")}`,
+        schoolId: school.id,
+        name: `${school.shortName} — ${rng.pick(COURSE_LABELS)} ${i + 1}`,
+      });
+      counter++;
+    }
+  }
+
+  return sessions;
+}
+
+export function generateClasses(rng: SeededRandom, schools: School[], sessions: Session[]): ClassSession[] {
+  const classSessions: ClassSession[] = [];
   let counter = 1;
   const now = new Date(Date.UTC(CURRENT_YEAR, CURRENT_MONTH - 1, CURRENT_DAY));
 
   for (const school of schools) {
     const attendanceRate = ATTENDANCE_RATE_BY_SCHOOL[school.id] ?? 0.8;
-    const sessionsPerWeek = Math.round(18 + (SCHOOL_ENROLLMENT_WEIGHTS[school.id] ?? 1) * 14);
+    const schoolSessions = sessions.filter((s) => s.schoolId === school.id);
 
-    for (let week = 0; week < WEEKS_WINDOW; week++) {
-      for (let s = 0; s < sessionsPerWeek; s++) {
+    for (const session of schoolSessions) {
+      for (let week = 0; week < WEEKS_WINDOW; week++) {
         const daysAgo = week * 7 + rng.int(0, 6);
         const scheduled = new Date(now);
         scheduled.setUTCDate(scheduled.getUTCDate() - daysAgo);
         scheduled.setUTCHours(rng.int(8, 17), rng.pick([0, 15, 30, 45]), 0, 0);
 
-        sessions.push({
+        const month = scheduled.getUTCMonth();
+        const semester = month < 6 ? "Spring" : "Fall";
+
+        classSessions.push({
           id: `BNU-CLS-${String(counter).padStart(6, "0")}`,
           schoolId: school.id,
+          sessionId: session.id,
           scheduledAt: scheduled.toISOString(),
+          year: scheduled.getUTCFullYear(),
+          semester,
           attendanceStatus: rng.bool(attendanceRate) ? "Attended" : "Not Attended",
         });
         counter++;
@@ -47,5 +77,5 @@ export function generateClasses(rng: SeededRandom, schools: School[]): ClassSess
     }
   }
 
-  return sessions;
+  return classSessions;
 }

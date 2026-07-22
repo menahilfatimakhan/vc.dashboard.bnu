@@ -43,7 +43,7 @@ export interface ScholarshipType {
 
 // ---- Canonical rosters ----
 
-export type EnrollmentStatus = "Active" | "Graduated" | "Withdrawn";
+export type EnrollmentStatus = "Active" | "Frozen" | "Dormant" | "Struck Off";
 
 export interface Student {
   id: string;
@@ -86,6 +86,8 @@ export interface DCCase {
   schoolId: string;
   programmeId: string;
   dateRaised: string; // ISO date
+  year: number;
+  semester: Semester;
   violationType: string;
   status: DCCaseStatus;
 }
@@ -98,6 +100,8 @@ export interface ScholarshipRecipient {
   programmeId: string;
   scholarshipTypeId: string;
   awardYear: number;
+  awardSemester: Semester;
+  amount: number;
 }
 
 export type ApplicationStatus = "Received" | "Admitted" | "Rejected";
@@ -109,14 +113,26 @@ export interface Application {
   semester: Semester;
   year: number;
   status: ApplicationStatus;
+  feePaid: boolean; // processing-fee payment, precedes the admit decision
 }
 
 export type AttendanceStatus = "Attended" | "Not Attended";
 
+// A Session is a recurring course/lecture slot (e.g. "BSCS - Data Structures - A");
+// each ClassSession row is one individual weekly occurrence of that Session.
+export interface Session {
+  id: string;
+  schoolId: string;
+  name: string;
+}
+
 export interface ClassSession {
   id: string;
   schoolId: string;
+  sessionId: string;
   scheduledAt: string; // ISO datetime
+  year: number;
+  semester: Semester;
   attendanceStatus: AttendanceStatus;
 }
 
@@ -198,6 +214,45 @@ export interface FlagshipInitiative {
   relatedEntities: string[];
 }
 
+// ---- Innovation & Incubation (speculative — see root CLAUDE.md) ----
+
+export interface CyberParticipant {
+  id: string;
+  name: string;
+  email: string;
+  schoolId: string;
+}
+
+export interface IncubationVenture {
+  id: string;
+  ventureName: string;
+  founderName: string;
+  founderContact: string;
+  description: string;
+}
+
+export interface RegisteredVenture {
+  id: string;
+  registrationNumber: string;
+  ventureName: string;
+  schoolId: string;
+  description: string;
+}
+
+// ---- Overview-specific aggregates ----
+
+export interface SchoolCountApplicantsDatum {
+  schoolsAppliedTo: number; // 1-8
+  thisYear: number;
+  lastYear: number;
+}
+
+export interface TuitionRevenuePoint {
+  period: string; // semester period value, e.g. "2025-Fall"
+  label: string;
+  revenue: number;
+}
+
 // ---- Canonical data bundle ----
 
 export interface CanonicalData {
@@ -213,6 +268,7 @@ export interface CanonicalData {
   dcCases: DCCase[];
   scholarshipRecipients: ScholarshipRecipient[];
   applications: Application[];
+  sessions: Session[];
   classSessions: ClassSession[];
   ePortalCases: EPortalCase[];
   grants: Grant[];
@@ -225,6 +281,13 @@ export interface CanonicalData {
   researchGrantApplications: ResearchGrantApplication[];
   partnerships: Partnership[];
   flagshipInitiatives: FlagshipInitiative[];
+
+  cyberParticipants: CyberParticipant[];
+  incubationVentures: IncubationVenture[];
+  registeredVentures: RegisteredVenture[];
+
+  schoolCountApplicants: SchoolCountApplicantsDatum[];
+  tuitionRevenue: TuitionRevenuePoint[];
 }
 
 // ---- Generic service-layer helpers ----

@@ -53,7 +53,7 @@ export function PieChartInner({ data, donut, onSegmentClick, height = 260, color
   return (
     <div className="flex flex-col">
       <div className="relative" style={{ height }}>
-        <ResponsiveContainer width="100%" height="100%">
+        <ResponsiveContainer width="100%" height={height}>
           <PieChart>
             <Pie
               data={data}

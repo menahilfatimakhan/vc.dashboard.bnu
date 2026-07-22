@@ -34,11 +34,9 @@ export function generateStudentRoster(rng: SeededRandom, schools: School[]): Stu
     const semester = rng.bool(0.82) ? "Fall" : "Spring";
     const enrollmentYear = CURRENT_YEAR - rng.int(0, ENROLLMENT_YEAR_SPAN - 1);
 
-    const enrollmentStatus = rng.bool(0.91)
-      ? "Active"
-      : rng.bool(0.6)
-        ? "Graduated"
-        : "Withdrawn";
+    const statusRoll = rng.float(0, 1);
+    const enrollmentStatus =
+      statusRoll < 0.85 ? "Active" : statusRoll < 0.92 ? "Frozen" : statusRoll < 0.97 ? "Dormant" : "Struck Off";
 
     const cgpa = clampCgpa(rng.gaussian(3.1, 0.35));
 

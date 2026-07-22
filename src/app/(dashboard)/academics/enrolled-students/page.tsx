@@ -1,51 +1,35 @@
 "use client";
 
-import { useState } from "react";
 import { Users, UserCheck, Sun, Snowflake } from "lucide-react";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { Breadcrumb } from "@/components/ui/Breadcrumb";
 import { FilterBar, type FilterFieldConfig } from "@/components/ui/FilterBar";
 import { SummaryCard } from "@/components/ui/SummaryCard";
 import { ChartCard } from "@/components/ui/ChartCard";
-import { DataTable, type Column } from "@/components/ui/DataTable";
-import { StatusPill } from "@/components/ui/StatusPill";
 import { useModuleFilters, type DrillLevelConfig } from "@/hooks/useModuleFilters";
 import { useAsync } from "@/hooks/useAsync";
 import { SCHOOLS, resolveSchool, resolveProgramme } from "@/lib/data/catalog/schools";
-import {
-  getEnrolledStudents,
-  getEnrolledStudentsSummary,
-  type EnrolledFilters,
-} from "@/lib/services/enrolledStudentsService";
-import type { Student } from "@/lib/data/types";
+import { getEnrolledStudentsSummary, type EnrolledFilters } from "@/lib/services/enrolledStudentsService";
+import { SEMESTER_PERIOD_OPTIONS } from "@/lib/data/semesters";
 
 const LEVELS: DrillLevelConfig[] = [
   { level: "school", filterKey: "schoolId", resolveLabel: resolveSchool },
   { level: "programme", filterKey: "programmeId", resolveLabel: resolveProgramme },
 ];
 
-const PAGE_SIZE = 10;
-
 export default function EnrolledStudentsPage() {
   const { filters, breadcrumb, setFilter, jumpToBreadcrumb, resetAll } =
     useModuleFilters<EnrolledFilters>({ levels: LEVELS });
-  const [page, setPage] = useState(1);
 
   const summary = useAsync(() => getEnrolledStudentsSummary(filters), [
     filters.schoolId,
     filters.programmeId,
     filters.semester,
-    filters.dateFrom,
-    filters.dateTo,
+    filters.semesterFrom,
+    filters.semesterTo,
   ]);
 
-  const records = useAsync(
-    () => getEnrolledStudents(filters, { page, pageSize: PAGE_SIZE }),
-    [filters.schoolId, filters.programmeId, filters.semester, filters.dateFrom, filters.dateTo, page],
-  );
-
   function handleFilterChange(key: string, value: string | undefined) {
-    setPage(1);
     setFilter(key, value);
   }
 
@@ -68,24 +52,13 @@ export default function EnrolledStudentsPage() {
         { value: "Spring", label: "Spring" },
       ],
     },
-    { key: "dateFrom", label: "Enrolled from", kind: "date" },
-    { key: "dateTo", label: "Enrolled to", kind: "date" },
+    { key: "semesterFrom", label: "From", kind: "select", options: SEMESTER_PERIOD_OPTIONS },
+    { key: "semesterTo", label: "To", kind: "select", options: SEMESTER_PERIOD_OPTIONS },
   ];
 
   const byProgrammeData = filters.schoolId
     ? summary.data?.byProgramme
     : summary.data?.byProgramme.slice(0, 10);
-
-  const columns: Column<Student>[] = [
-    { key: "id", header: "Student ID" },
-    { key: "name", header: "Name" },
-    { key: "schoolId", header: "School", render: (r) => resolveSchool(r.schoolId) },
-    { key: "programmeId", header: "Programme", render: (r) => resolveProgramme(r.programmeId) },
-    { key: "semester", header: "Semester" },
-    { key: "enrollmentYear", header: "Year", align: "right" },
-    { key: "enrollmentStatus", header: "Status", render: (r) => <StatusPill status={r.enrollmentStatus} /> },
-    { key: "cgpa", header: "CGPA", align: "right" },
-  ];
 
   return (
     <div className="flex flex-col gap-4">
@@ -127,24 +100,9 @@ export default function EnrolledStudentsPage() {
           loading={summary.loading}
           onSegmentClick={(key) => handleFilterChange("programmeId", key)}
         />
-        <ChartCard
-          title="Fall vs Spring"
-          variant="donut"
-          data={summary.data?.bySemester}
-          loading={summary.loading}
-        />
+        <ChartCard title="Fall vs Spring" variant="donut" data={summary.data?.bySemester} loading={summary.loading} />
+        <ChartCard title="By Status" variant="pie" data={summary.data?.byStatus} loading={summary.loading} />
       </div>
-
-      <DataTable
-        columns={columns}
-        rows={records.data?.rows}
-        total={records.data?.total}
-        page={page}
-        pageSize={PAGE_SIZE}
-        onPageChange={setPage}
-        loading={records.loading}
-        emptyMessage="No enrolled students match the current filters."
-      />
     </div>
   );
 }

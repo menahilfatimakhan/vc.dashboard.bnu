@@ -4,14 +4,14 @@ import { resolveProgramme, resolveSchool, resolveSchoolShort } from "../data/cat
 import { groupCount } from "./groupCount";
 import { paginate } from "./paginate";
 import { simulateDelay } from "./simulateDelay";
-import { inDateRange } from "./dateRangeFilter";
+import { inSemesterPeriodRange } from "../data/semesters";
 
 export interface DCCaseFilters {
   schoolId?: string;
   programmeId?: string;
   status?: DCCaseStatus;
-  dateFrom?: string;
-  dateTo?: string;
+  semesterFrom?: string;
+  semesterTo?: string;
 }
 
 function matches(filters: DCCaseFilters) {
@@ -19,7 +19,7 @@ function matches(filters: DCCaseFilters) {
     (!filters.schoolId || c.schoolId === filters.schoolId) &&
     (!filters.programmeId || c.programmeId === filters.programmeId) &&
     (!filters.status || c.status === filters.status) &&
-    inDateRange(c.dateRaised, filters.dateFrom, filters.dateTo);
+    inSemesterPeriodRange(c.year, c.semester, filters.semesterFrom, filters.semesterTo);
 }
 
 export interface DCCasesSummary {

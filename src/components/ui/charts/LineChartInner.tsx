@@ -14,9 +14,10 @@ export interface LineChartInnerProps {
   data: LineDatum[];
   height?: number;
   color?: string;
+  yTickFormatter?: (value: number) => string;
 }
 
-export function LineChartInner({ data, height = 260, color = ACCENT[500] }: LineChartInnerProps) {
+export function LineChartInner({ data, height = 260, color = ACCENT[500], yTickFormatter }: LineChartInnerProps) {
   const reducedMotion = usePrefersReducedMotion();
   const gradientId = `line-area-gradient-${useId().replace(/[:]/g, "")}`;
 
@@ -31,7 +32,13 @@ export function LineChartInner({ data, height = 260, color = ACCENT[500] }: Line
         </defs>
         <CartesianGrid vertical={false} stroke={INK.grid} />
         <XAxis dataKey="x" tick={{ fontSize: 11, fill: INK.muted }} axisLine={false} tickLine={false} />
-        <YAxis tick={{ fontSize: 11, fill: INK.muted }} axisLine={false} tickLine={false} width={40} />
+        <YAxis
+          tick={{ fontSize: 11, fill: INK.muted }}
+          axisLine={false}
+          tickLine={false}
+          width={yTickFormatter ? 52 : 40}
+          tickFormatter={yTickFormatter}
+        />
         <Tooltip
           contentStyle={TOOLTIP.contentStyle}
           itemStyle={TOOLTIP.itemStyle}

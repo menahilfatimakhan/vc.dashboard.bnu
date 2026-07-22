@@ -8,6 +8,13 @@ export function formatCurrencyPKR(value: number): string {
   return `PKR ${formatNumber(value)}`;
 }
 
+export function formatCompactPKR(value: number): string {
+  if (value >= 10000000) return `${(value / 10000000).toFixed(1)}Cr`;
+  if (value >= 100000) return `${(value / 100000).toFixed(1)}L`;
+  if (value >= 1000) return `${(value / 1000).toFixed(0)}K`;
+  return `${value}`;
+}
+
 export function formatPercent(value: number, digits = 1): string {
   return `${value.toFixed(digits)}%`;
 }

@@ -13,8 +13,8 @@ import {
   UserCog,
   Briefcase,
   Wallet,
-  HandCoins,
   FlaskConical,
+  Rocket,
   Settings,
   HelpCircle,
 } from "lucide-react";
@@ -74,8 +74,8 @@ export const NAV_GROUPS: NavGroup[] = [
   {
     category: "Research",
     items: [
-      { label: "Grants", href: "/research/grants", icon: HandCoins },
-      { label: "Research, Partnerships & ORIP", href: "/research/partnerships", icon: FlaskConical, speculative: true },
+      { label: "ORIP", href: "/research/orip", icon: FlaskConical, speculative: true },
+      { label: "Innovation & Incubation", href: "/research/innovation", icon: Rocket, speculative: true },
     ],
   },
 ];

@@ -13,7 +13,7 @@ import { generateDCCases } from "./generators/dcCases";
 import { generateScholarships } from "./generators/scholarships";
 import { generateAdmissions } from "./generators/admissions";
 import { generateHostelResidents } from "./generators/hostelResidents";
-import { generateClasses } from "./generators/classes";
+import { generateSessions, generateClasses } from "./generators/classes";
 import { generateEPortalCases } from "./generators/ePortalCases";
 import { generateGrants } from "./generators/grants";
 import { generateStudentLife } from "./generators/studentLife";
@@ -23,6 +23,12 @@ import {
   generatePublications,
   generateResearchGrantApplications,
 } from "./generators/research";
+import {
+  generateCyberParticipants,
+  generateIncubationVentures,
+  generateRegisteredVentures,
+} from "./generators/innovation";
+import { generateSchoolCountApplicants, generateTuitionRevenue } from "./generators/overviewExtras";
 
 // Each generator gets its own PRNG instance at DATA_SEED + <fixed offset>, so one
 // generator's internal changes can never shift another generator's random draws.
@@ -41,6 +47,12 @@ const OFFSETS = {
   studentLife: 11,
   publications: 12,
   researchGrants: 13,
+  sessions: 14,
+  cyber: 15,
+  incubation: 16,
+  ventures: 17,
+  schoolCountApplicants: 18,
+  tuitionRevenue: 19,
 } as const;
 
 let cache: CanonicalData | null = null;
@@ -69,7 +81,8 @@ export function getCanonicalData(): CanonicalData {
     students,
     hostels,
   );
-  const classSessions = generateClasses(seededRandom(DATA_SEED + OFFSETS.classes), schools);
+  const sessions = generateSessions(seededRandom(DATA_SEED + OFFSETS.sessions), schools);
+  const classSessions = generateClasses(seededRandom(DATA_SEED + OFFSETS.classes), schools, sessions);
   const ePortalCases = generateEPortalCases(seededRandom(DATA_SEED + OFFSETS.ePortalCases));
   const grants = generateGrants(seededRandom(DATA_SEED + OFFSETS.grants), schools, departments);
 
@@ -91,6 +104,15 @@ export function getCanonicalData(): CanonicalData {
   const partnerships = generatePartnerships();
   const flagshipInitiatives = generateFlagshipInitiatives();
 
+  const cyberParticipants = generateCyberParticipants(seededRandom(DATA_SEED + OFFSETS.cyber), schools);
+  const incubationVentures = generateIncubationVentures(seededRandom(DATA_SEED + OFFSETS.incubation));
+  const registeredVentures = generateRegisteredVentures(seededRandom(DATA_SEED + OFFSETS.ventures), schools);
+
+  const schoolCountApplicants = generateSchoolCountApplicants(
+    seededRandom(DATA_SEED + OFFSETS.schoolCountApplicants),
+  );
+  const tuitionRevenue = generateTuitionRevenue(seededRandom(DATA_SEED + OFFSETS.tuitionRevenue));
+
   cache = {
     schools,
     departments,
@@ -102,6 +124,7 @@ export function getCanonicalData(): CanonicalData {
     dcCases,
     scholarshipRecipients,
     applications,
+    sessions,
     classSessions,
     ePortalCases,
     grants,
@@ -112,6 +135,11 @@ export function getCanonicalData(): CanonicalData {
     researchGrantApplications,
     partnerships,
     flagshipInitiatives,
+    cyberParticipants,
+    incubationVentures,
+    registeredVentures,
+    schoolCountApplicants,
+    tuitionRevenue,
   };
 
   return cache;

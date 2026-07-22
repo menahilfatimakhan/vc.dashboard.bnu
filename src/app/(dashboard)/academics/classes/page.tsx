@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import { CalendarCheck, CalendarX, Percent } from "lucide-react";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { Breadcrumb } from "@/components/ui/Breadcrumb";
@@ -13,33 +12,45 @@ import { StatusPill } from "@/components/ui/StatusPill";
 import { useModuleFilters, type DrillLevelConfig } from "@/hooks/useModuleFilters";
 import { useAsync } from "@/hooks/useAsync";
 import { SCHOOLS, resolveSchool } from "@/lib/data/catalog/schools";
-import { getClassSessions, getClassesSummary, type ClassesFilters } from "@/lib/services/classesService";
+import {
+  getClassesSummary,
+  getSessionClasses,
+  getSessions,
+  resolveSessionName,
+  type ClassesFilters,
+} from "@/lib/services/classesService";
 import { formatDateTime } from "@/lib/utils/format";
+import { SEMESTER_PERIOD_OPTIONS } from "@/lib/data/semesters";
 
-const LEVELS: DrillLevelConfig[] = [{ level: "school", filterKey: "schoolId", resolveLabel: resolveSchool }];
-
-const PAGE_SIZE = 10;
+const LEVELS: DrillLevelConfig[] = [
+  { level: "school", filterKey: "schoolId", resolveLabel: resolveSchool },
+  { level: "session", filterKey: "sessionId", resolveLabel: resolveSessionName },
+];
 
 export default function ClassesPage() {
   const { filters, breadcrumb, setFilter, jumpToBreadcrumb, resetAll } =
     useModuleFilters<ClassesFilters>({ levels: LEVELS });
-  const [page, setPage] = useState(1);
 
-  const summary = useAsync(() => getClassesSummary(filters), [filters.schoolId, filters.dateFrom, filters.dateTo]);
-  const records = useAsync(
-    () => getClassSessions(filters, { page, pageSize: PAGE_SIZE }),
-    [filters.schoolId, filters.dateFrom, filters.dateTo, page],
+  const summary = useAsync(() => getClassesSummary(filters), [
+    filters.schoolId,
+    filters.sessionId,
+    filters.semesterFrom,
+    filters.semesterTo,
+  ]);
+  const sessions = useAsync(() => getSessions(filters), [filters.schoolId, filters.semesterFrom, filters.semesterTo]);
+  const sessionClasses = useAsync(
+    () => (filters.sessionId ? getSessionClasses(filters.sessionId) : Promise.resolve([])),
+    [filters.sessionId],
   );
 
   function handleFilterChange(key: string, value: string | undefined) {
-    setPage(1);
     setFilter(key, value);
   }
 
   const filterConfig: FilterFieldConfig[] = [
     { key: "schoolId", label: "School", kind: "select", options: SCHOOLS.map((s) => ({ value: s.id, label: s.name })) },
-    { key: "dateFrom", label: "From", kind: "date" },
-    { key: "dateTo", label: "To", kind: "date" },
+    { key: "semesterFrom", label: "From", kind: "select", options: SEMESTER_PERIOD_OPTIONS },
+    { key: "semesterTo", label: "To", kind: "select", options: SEMESTER_PERIOD_OPTIONS },
   ];
 
   const attendanceRateData = (summary.data?.bySchool ?? []).map((s) => ({
@@ -48,9 +59,16 @@ export default function ClassesPage() {
     value: Number(s.attendanceRate.toFixed(1)),
   }));
 
-  const columns: Column<{ id: string; schoolName: string; scheduledAt: string; attendanceStatus: string }>[] = [
-    { key: "id", header: "Class ID" },
+  const sessionColumns: Column<{ id: string; name: string; schoolName: string; scheduled: number; attended: number; attendanceRate: number }>[] = [
+    { key: "name", header: "Session" },
     { key: "schoolName", header: "School" },
+    { key: "scheduled", header: "Scheduled", align: "right" },
+    { key: "attended", header: "Attended", align: "right" },
+    { key: "attendanceRate", header: "Attendance", align: "right", render: (r) => `${r.attendanceRate.toFixed(1)}%` },
+  ];
+
+  const classColumns: Column<{ id: string; scheduledAt: string; attendanceStatus: string }>[] = [
+    { key: "id", header: "Class ID" },
     { key: "scheduledAt", header: "Scheduled", render: (r) => formatDateTime(r.scheduledAt) },
     { key: "attendanceStatus", header: "Attendance", render: (r) => <StatusPill status={r.attendanceStatus} /> },
   ];
@@ -87,16 +105,29 @@ export default function ClassesPage() {
         />
       </ChartCard>
 
-      <DataTable
-        columns={columns}
-        rows={records.data?.rows}
-        total={records.data?.total}
-        page={page}
-        pageSize={PAGE_SIZE}
-        onPageChange={setPage}
-        loading={records.loading}
-        emptyMessage="No class sessions match the current filters."
-      />
+      {!filters.sessionId ? (
+        <DataTable
+          columns={sessionColumns}
+          rows={sessions.data}
+          total={sessions.data?.length}
+          page={1}
+          pageSize={sessions.data?.length ?? 20}
+          onPageChange={() => {}}
+          loading={sessions.loading}
+          emptyMessage="No sessions match the current filters."
+        />
+      ) : (
+        <DataTable
+          columns={classColumns}
+          rows={sessionClasses.data}
+          total={sessionClasses.data?.length}
+          page={1}
+          pageSize={sessionClasses.data?.length ?? 20}
+          onPageChange={() => {}}
+          loading={sessionClasses.loading}
+          emptyMessage="No individual class occurrences for this session."
+        />
+      )}
     </div>
   );
 }

@@ -5,17 +5,19 @@ import type { Grant } from "../data/types";
 // BR-GRT-01). Nothing downstream stores these as precomputed fields — every value
 // is derived here, at call time, from the underlying date/number.
 
-export type CgpaDivision = "Unclassified" | "Division 1" | "Division 2" | "Division 3";
+export type CgpaTier = "Unclassified" | "Tier 1" | "Tier 2" | "Tier 3";
 
 /**
- * BR-PERF-01: Division 1: 2.00-2.99 · Division 2: 3.00-3.49 · Division 3: 3.50-4.00.
- * The SRS defines no bucket below 2.00 — that range maps to "Unclassified"
- * (a documented assumption, see root CLAUDE.md).
+ * BR-PERF-01, relabeled per product direction: Tier 1 (top): 3.50-4.00 ·
+ * Tier 2: 3.00-3.49 · Tier 3: 2.00-2.99. The SRS defines no bucket below 2.00 —
+ * that range maps to "Unclassified" (a documented assumption, see root CLAUDE.md).
+ * Note the numbering inverts the SRS's own "Division 1/2/3" order (which ran
+ * low-to-high) — Tier 1 is intentionally the top band here.
  */
-export function getCgpaDivision(cgpa: number): CgpaDivision {
-  if (cgpa >= 3.5) return "Division 3";
-  if (cgpa >= 3.0) return "Division 2";
-  if (cgpa >= 2.0) return "Division 1";
+export function getCgpaTier(cgpa: number): CgpaTier {
+  if (cgpa >= 3.5) return "Tier 1";
+  if (cgpa >= 3.0) return "Tier 2";
+  if (cgpa >= 2.0) return "Tier 3";
   return "Unclassified";
 }
 

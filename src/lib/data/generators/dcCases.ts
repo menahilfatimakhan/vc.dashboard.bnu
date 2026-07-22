@@ -1,5 +1,6 @@
 import type { SeededRandom } from "../prng";
 import type { DCCase, Student } from "../types";
+import { semesterOfDate } from "../semesters";
 
 const VIOLATION_TYPES = [
   "Academic Dishonesty",
@@ -25,7 +26,7 @@ function randomPastDate(rng: SeededRandom, maxDaysAgo: number): string {
 }
 
 export function generateDCCases(rng: SeededRandom, students: Student[]): DCCase[] {
-  const active = students.filter((s) => s.enrollmentStatus !== "Withdrawn");
+  const active = students.filter((s) => s.enrollmentStatus !== "Struck Off");
   const caseCount = Math.round(active.length * CASE_RATE);
   const subjects = rng.shuffle(active).slice(0, caseCount);
 
@@ -33,6 +34,7 @@ export function generateDCCases(rng: SeededRandom, students: Student[]): DCCase[
     const status = rng.bool(0.3) ? "Pending" : "Resolved";
     // Pending cases skew recent; resolved cases spread further back.
     const dateRaised = randomPastDate(rng, status === "Pending" ? 45 : 540);
+    const { year, semester } = semesterOfDate(new Date(dateRaised));
 
     return {
       id: `BNU-DC-${String(i + 1).padStart(4, "0")}`,
@@ -41,6 +43,8 @@ export function generateDCCases(rng: SeededRandom, students: Student[]): DCCase[
       schoolId: student.schoolId,
       programmeId: student.programmeId,
       dateRaised,
+      year,
+      semester,
       violationType: rng.pick(VIOLATION_TYPES),
       status,
     };

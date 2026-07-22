@@ -4,14 +4,14 @@ import { resolveProgramme, resolveSchoolShort } from "../data/catalog/schools";
 import { groupCount } from "./groupCount";
 import { paginate } from "./paginate";
 import { simulateDelay } from "./simulateDelay";
-import { yearInRange } from "./dateRangeFilter";
+import { inSemesterPeriodRange } from "../data/semesters";
 
 export interface EnrolledFilters {
   schoolId?: string;
   programmeId?: string;
   semester?: Semester;
-  dateFrom?: string;
-  dateTo?: string;
+  semesterFrom?: string;
+  semesterTo?: string;
 }
 
 function matches(filters: EnrolledFilters) {
@@ -19,7 +19,7 @@ function matches(filters: EnrolledFilters) {
     (!filters.schoolId || s.schoolId === filters.schoolId) &&
     (!filters.programmeId || s.programmeId === filters.programmeId) &&
     (!filters.semester || s.semester === filters.semester) &&
-    yearInRange(s.enrollmentYear, filters.dateFrom, filters.dateTo);
+    inSemesterPeriodRange(s.enrollmentYear, s.semester, filters.semesterFrom, filters.semesterTo);
 }
 
 export interface EnrolledSummary {
@@ -28,6 +28,7 @@ export interface EnrolledSummary {
   bySchool: ReturnType<typeof groupCount>;
   byProgramme: ReturnType<typeof groupCount>;
   bySemester: ReturnType<typeof groupCount>;
+  byStatus: ReturnType<typeof groupCount>;
 }
 
 export async function getEnrolledStudentsSummary(filters: EnrolledFilters): Promise<EnrolledSummary> {
@@ -41,6 +42,7 @@ export async function getEnrolledStudentsSummary(filters: EnrolledFilters): Prom
     bySchool: groupCount(rows, (s) => s.schoolId, resolveSchoolShort),
     byProgramme: groupCount(rows, (s) => s.programmeId, resolveProgramme),
     bySemester: groupCount(rows, (s) => s.semester),
+    byStatus: groupCount(rows, (s) => s.enrollmentStatus),
   };
 }
 
