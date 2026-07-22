@@ -1,7 +1,8 @@
 "use client";
 
-import { Layers } from "lucide-react";
+import Image from "next/image";
 import { OVERVIEW_ITEM, NAV_GROUPS, FOOTER_ITEMS } from "@/config/nav";
+import bnuLogo from "../../../assets/brand/favicon.jpg";
 import { UserBlock } from "./UserBlock";
 import { NavGroup } from "./NavGroup";
 import { NavLink } from "./NavLink";
@@ -9,9 +10,9 @@ import { NavLink } from "./NavLink";
 export function Sidebar() {
   return (
     <aside className="fixed inset-y-0 left-0 z-20 hidden w-64 flex-col border-r border-hairline bg-surface px-3 py-4 md:flex">
-      <div className="flex items-center gap-2 px-2 pb-4">
-        <Layers className="h-6 w-6 text-accent-500" strokeWidth={2.2} />
-        <span className="text-lg font-semibold text-ink">BNU Vitals</span>
+      <div className="flex items-center gap-2.5 px-2 pb-4">
+        <Image src={bnuLogo} alt="BNU" className="h-10 w-10 shrink-0 rounded-md object-contain" priority />
+        <h1 className="text-2xl font-bold tracking-tight text-ink">BNU Vitals</h1>
       </div>
 
       <UserBlock />
@@ -27,19 +28,9 @@ export function Sidebar() {
       </nav>
 
       <div className="mt-2 border-t border-hairline pt-2">
-        {FOOTER_ITEMS.map((item) => {
-          const Icon = item.icon;
-          return (
-            <span
-              key={item.href}
-              className="flex cursor-not-allowed items-center gap-2.5 rounded-lg px-3 py-2.5 text-[13.5px] text-ink-muted"
-              title="Not interactive in this prototype"
-            >
-              <Icon className="h-[18px] w-[18px] shrink-0" strokeWidth={1.5} />
-              {item.label}
-            </span>
-          );
-        })}
+        {FOOTER_ITEMS.map((item) => (
+          <NavLink key={item.href} href={item.href} icon={item.icon} label={item.label} />
+        ))}
       </div>
     </aside>
   );

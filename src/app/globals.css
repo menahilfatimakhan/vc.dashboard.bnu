@@ -46,6 +46,80 @@
   --shadow-card-hover: 0 4px 12px rgba(16, 24, 40, 0.08);
 }
 
+/*
+  Dark mode — same token names, dark-appropriate values. Applied automatically
+  when the OS prefers dark (unless the user explicitly picked light), and
+  always applied when the user explicitly picked dark via Settings — see
+  src/hooks/useTheme.ts. Because @theme inline below aliases every utility to
+  these custom properties via var(), overriding them here is enough to retheme
+  every `bg-surface`/`text-ink`/etc. utility in the app with no per-component change.
+*/
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --background: #0b1220;
+    --foreground: #e5e9f0;
+
+    --color-canvas: #0b1220;
+    --color-surface: #121a2b;
+    --color-hairline: #232d3f;
+    --color-hairline-hover: #2f3a4f;
+    --color-subtle: #1a2333;
+    --color-page: #0b1220;
+    --color-grid: #1c2534;
+
+    --color-ink: #e5e9f0;
+    --color-ink-secondary: #a8b2c2;
+    --color-ink-muted: #6b7688;
+
+    --color-accent-50: #16232b;
+    --color-accent-100: #1c2f38;
+    --color-accent-500: #4a95b3;
+    --color-accent-600: #6badc7;
+
+    --color-status-critical: #f66;
+    --color-status-critical-50: #2a1414;
+    --color-status-good: #3ddc94;
+    --color-status-good-50: #12261c;
+    --color-status-warning: #ffb547;
+    --color-status-warning-50: #2a2110;
+
+    --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.4);
+    --shadow-card-hover: 0 4px 14px rgba(0, 0, 0, 0.5);
+  }
+}
+
+:root[data-theme="dark"] {
+  --background: #0b1220;
+  --foreground: #e5e9f0;
+
+  --color-canvas: #0b1220;
+  --color-surface: #121a2b;
+  --color-hairline: #232d3f;
+  --color-hairline-hover: #2f3a4f;
+  --color-subtle: #1a2333;
+  --color-page: #0b1220;
+  --color-grid: #1c2534;
+
+  --color-ink: #e5e9f0;
+  --color-ink-secondary: #a8b2c2;
+  --color-ink-muted: #6b7688;
+
+  --color-accent-50: #16232b;
+  --color-accent-100: #1c2f38;
+  --color-accent-500: #4a95b3;
+  --color-accent-600: #6badc7;
+
+  --color-status-critical: #f66;
+  --color-status-critical-50: #2a1414;
+  --color-status-good: #3ddc94;
+  --color-status-good-50: #12261c;
+  --color-status-warning: #ffb547;
+  --color-status-warning-50: #2a2110;
+
+  --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-card-hover: 0 4px 14px rgba(0, 0, 0, 0.5);
+}
+
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -94,6 +168,7 @@ body {
   color: var(--foreground);
   font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
   font-variant-numeric: tabular-nums;
+  transition: background-color 150ms ease, color 150ms ease;
 }
 
 /* Recharts renders axis/tooltip/label text as SVG <text> — Tailwind's

@@ -21,7 +21,7 @@ import { LineChartInner } from "@/components/ui/charts/LineChartInner";
 import { useAsync } from "@/hooks/useAsync";
 import { getOverviewSummary } from "@/lib/services/overviewService";
 import { formatCurrencyPKR, formatCompactPKR } from "@/lib/utils/format";
-import { ACCENT, INK, TOOLTIP } from "@/config/theme";
+import { CATEGORICAL, INK, TOOLTIP } from "@/config/theme";
 
 const TILE_LINKS: Record<string, string> = {
   totalEnrolled: "/academics/enrolled-students",
@@ -177,19 +177,19 @@ export default function OverviewPage() {
                 labelStyle={TOOLTIP.labelStyle}
               />
               <Legend wrapperStyle={{ fontSize: 12, color: INK.muted }} iconType="circle" iconSize={8} />
-              <Bar dataKey="This Year" fill={ACCENT[500]} radius={[6, 6, 0, 0]} maxBarSize={28} />
-              <Line type="monotone" dataKey="Last Year" stroke={ACCENT[600]} strokeWidth={2} dot={{ r: 4 }} />
+              <Bar dataKey="This Year" fill={CATEGORICAL[0]} radius={[6, 6, 0, 0]} maxBarSize={28} />
+              <Line type="monotone" dataKey="Last Year" stroke={CATEGORICAL[1]} strokeWidth={2.5} dot={{ r: 4 }} />
             </ComposedChart>
           </ResponsiveContainer>
         </ChartCard>
 
         <ChartCard
           title="Financial Pulse"
-          subtitle="Tuition revenue trend by semester (Overview-only, Finance stays out of scope)"
+          subtitle="Tuition revenue trend by semester"
           loading={overview.loading}
           height={300}
         >
-          <LineChartInner data={tuitionData} height={300} yTickFormatter={formatCompactPKR} />
+          <LineChartInner data={tuitionData} height={300} yTickFormatter={formatCompactPKR} color={CATEGORICAL[2]} />
         </ChartCard>
       </div>
     </div>
