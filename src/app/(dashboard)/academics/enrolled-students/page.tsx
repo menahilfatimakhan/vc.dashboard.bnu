@@ -1,6 +1,6 @@
 "use client";
 
-import { Users, UserCheck, Sun, Snowflake } from "lucide-react";
+import { Users, UserCheck, PauseCircle, XCircle, MinusCircle } from "lucide-react";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { Breadcrumb } from "@/components/ui/Breadcrumb";
 import { FilterBar, type FilterFieldConfig } from "@/components/ui/FilterBar";
@@ -66,20 +66,26 @@ export default function EnrolledStudentsPage() {
       <Breadcrumb items={breadcrumb} onJump={jumpToBreadcrumb} />
       <FilterBar filters={filters} config={filterConfig} onChange={handleFilterChange} onClearAll={resetAll} />
 
-      <div className="grid grid-cols-2 gap-5 lg:grid-cols-4">
+      <div className="grid grid-cols-2 gap-5 lg:grid-cols-5">
         <SummaryCard label="Total Enrolled" value={summary.data?.total} loading={summary.loading} icon={Users} />
         <SummaryCard label="Active" value={summary.data?.active} loading={summary.loading} icon={UserCheck} />
         <SummaryCard
-          label="Fall Semester"
-          value={summary.data?.bySemester.find((s) => s.key === "Fall")?.value ?? 0}
+          label="Frozen"
+          value={summary.data?.byStatus.find((s) => s.key === "Frozen")?.value ?? 0}
           loading={summary.loading}
-          icon={Sun}
+          icon={PauseCircle}
         />
         <SummaryCard
-          label="Spring Semester"
-          value={summary.data?.bySemester.find((s) => s.key === "Spring")?.value ?? 0}
+          label="Dormant"
+          value={summary.data?.byStatus.find((s) => s.key === "Dormant")?.value ?? 0}
           loading={summary.loading}
-          icon={Snowflake}
+          icon={MinusCircle}
+        />
+        <SummaryCard
+          label="Struck Off"
+          value={summary.data?.byStatus.find((s) => s.key === "Struck Off")?.value ?? 0}
+          loading={summary.loading}
+          icon={XCircle}
         />
       </div>
 

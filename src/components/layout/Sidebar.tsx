@@ -11,7 +11,7 @@ export function Sidebar() {
     <aside className="fixed inset-y-0 left-0 z-20 hidden w-64 flex-col border-r border-hairline bg-surface px-3 py-4 md:flex">
       <div className="flex items-center gap-2 px-2 pb-4">
         <Layers className="h-6 w-6 text-accent-500" strokeWidth={2.2} />
-        <span className="text-lg font-semibold text-ink">BNU Dashboard</span>
+        <span className="text-lg font-semibold text-ink">BNU Vitals</span>
       </div>
 
       <UserBlock />

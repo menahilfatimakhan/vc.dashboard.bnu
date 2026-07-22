@@ -38,6 +38,10 @@ export default function HostelPage() {
   const onCampus = summary.data?.byType.find((t) => t.key === "On-campus")?.value ?? 0;
   const offCampus = summary.data?.byType.find((t) => t.key === "Off-campus")?.value ?? 0;
 
+  const offCampusSplit = (summary.data?.byHostel ?? [])
+    .filter((h) => h.type === "Off-campus")
+    .map((h) => ({ key: h.id, label: h.name, value: h.occupied }));
+
   const TOGGLE_OPTIONS: { value: HostelType | undefined; label: string }[] = [
     { value: undefined, label: "All" },
     { value: "On-campus", label: "On-campus" },
@@ -76,18 +80,25 @@ export default function HostelPage() {
 
       <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
         <ChartCard title="On-Campus vs Off-Campus" variant="donut" data={summary.data?.byType} loading={summary.loading} />
-        <ChartCard title="Occupancy vs Capacity" loading={summary.loading} height={220}>
-          <StackedBarChartInner
-            data={occupancyData}
-            categoryKey="name"
-            series={[
-              { dataKey: "Occupied", label: "Occupied" },
-              { dataKey: "Vacant", label: "Vacant" },
-            ]}
-            height={220}
-          />
-        </ChartCard>
+        <ChartCard
+          title="Off-Campus Split — Bedian vs Safari"
+          variant="donut"
+          data={offCampusSplit}
+          loading={summary.loading}
+        />
       </div>
+
+      <ChartCard title="Occupancy vs Capacity" loading={summary.loading} height={220}>
+        <StackedBarChartInner
+          data={occupancyData}
+          categoryKey="name"
+          series={[
+            { dataKey: "Occupied", label: "Occupied" },
+            { dataKey: "Vacant", label: "Vacant" },
+          ]}
+          height={220}
+        />
+      </ChartCard>
     </div>
   );
 }

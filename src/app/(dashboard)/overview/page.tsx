@@ -30,7 +30,7 @@ const TILE_LINKS: Record<string, string> = {
   scholarshipSpend: "/academics/scholarships",
   openDCCases: "/conduct/dc-cases",
   escalatedEPortalCases: "/conduct/e-portal-cases",
-  grantsEndingSoon: "/research/orip",
+  grantsEndingSoon: "/research/grants",
   applicationPool: "/academics/admissions",
 };
 
@@ -151,6 +151,13 @@ export default function OverviewPage() {
         />
       </div>
 
+      <SummaryCard
+        label="Avg. Active CGPA"
+        value={overview.data ? overview.data.cgpaAverage.toFixed(2) : undefined}
+        loading={overview.loading}
+        icon={GraduationCap}
+      />
+
       <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
         <ChartCard
           title="Applicant Pool Breadth"
@@ -185,13 +192,6 @@ export default function OverviewPage() {
           <LineChartInner data={tuitionData} height={300} yTickFormatter={formatCompactPKR} />
         </ChartCard>
       </div>
-
-      <SummaryCard
-        label="Avg. Active CGPA"
-        value={overview.data ? overview.data.cgpaAverage.toFixed(2) : undefined}
-        loading={overview.loading}
-        icon={GraduationCap}
-      />
     </div>
   );
 }
